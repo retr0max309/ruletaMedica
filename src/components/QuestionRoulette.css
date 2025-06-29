@@ -10,6 +10,13 @@
   position: relative;
   box-sizing: border-box;
   overflow: hidden;
+  /* Optimización para móviles */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
 }
 
 .roulette-container::before {
@@ -39,6 +46,12 @@
   border-radius: 50%;
   padding: 8px;
   flex-shrink: 0;
+  /* Optimizaciones de rendimiento críticas */
+  will-change: transform;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 svg {
@@ -49,6 +62,25 @@ svg {
   height: 100%;
   max-width: 280px;
   max-height: 280px;
+  /* Optimizaciones SVG para móviles */
+  will-change: transform;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  shape-rendering: optimizeSpeed;
+  text-rendering: optimizeSpeed;
+  color-rendering: optimizeSpeed;
+  image-rendering: optimizeSpeed;
+}
+
+/* Clase específica para animación suave */
+.roulette-spinning {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 .roulette-pointer {
@@ -61,6 +93,9 @@ svg {
   z-index: 3;
   text-shadow: 0 2px 8px rgba(219, 62, 77, 0.3);
   filter: drop-shadow(0 0 15px #DB3E4D);
+  /* Optimización para el puntero */
+  -webkit-transform: translateX(-50%) translateZ(0);
+  transform: translateX(-50%) translateZ(0);
 }
 
 .spin-btn {
@@ -83,6 +118,11 @@ svg {
   z-index: 2;
   white-space: nowrap;
   flex-shrink: 0;
+  /* Optimización para botón */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .spin-btn::before {
@@ -91,7 +131,7 @@ svg {
 }
 
 .spin-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px) translateZ(0);
   box-shadow: 
     0 8px 30px rgba(219, 62, 77, 0.4),
     0 0 20px rgba(48, 88, 166, 0.3);
@@ -100,7 +140,7 @@ svg {
 }
 
 .spin-btn:active {
-  transform: translateY(-1px) scale(0.98);
+  transform: translateY(-1px) scale(0.98) translateZ(0);
   box-shadow: 
     0 4px 15px rgba(219, 62, 77, 0.3),
     0 0 12px rgba(48, 88, 166, 0.2);
@@ -109,7 +149,7 @@ svg {
 .spin-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  transform: none;
+  transform: translateZ(0);
   box-shadow: 
     0 4px 15px rgba(219, 62, 77, 0.2),
     0 0 10px rgba(48, 88, 166, 0.1);
@@ -131,6 +171,11 @@ svg {
   position: relative;
   z-index: 2;
   flex-shrink: 0;
+  /* Optimización para la pregunta */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .selected-question h2 {
@@ -151,16 +196,16 @@ svg {
 
 @keyframes pop-in {
   0% { 
-    transform: scale(0.7) translateY(15px); 
+    transform: scale(0.7) translateY(15px) translateZ(0); 
     opacity: 0; 
   }
   100% { 
-    transform: scale(1) translateY(0); 
+    transform: scale(1) translateY(0) translateZ(0); 
     opacity: 1; 
   }
 }
 
-/* Media queries para móviles */
+/* Media queries para móviles con optimizaciones adicionales */
 @media (max-width: 480px) {
   .roulette-container {
     margin-top: 10px;
@@ -172,20 +217,30 @@ svg {
     height: min(240px, 65vw);
     margin-bottom: 15px;
     padding: 6px;
+    /* Reducir efectos en móviles para mejor rendimiento */
+    filter: drop-shadow(0 4px 12px rgba(219, 62, 77, 0.15));
   }
   
   .roulette-pointer {
     top: -5px;
+    /* Simplificar efectos en móviles */
+    filter: drop-shadow(0 0 8px #DB3E4D);
   }
   
   .spin-btn {
     margin-bottom: 12px;
     letter-spacing: 0.8px;
+    /* Reducir sombras en móviles */
+    box-shadow: 
+      0 4px 20px rgba(219, 62, 77, 0.25),
+      0 0 12px rgba(48, 88, 166, 0.15);
   }
   
   .selected-question {
     margin-top: 8px;
     border-radius: 15px;
+    /* Reducir sombras en móviles */
+    box-shadow: 0 6px 20px rgba(48, 88, 166, 0.2);
   }
 }
 
@@ -206,16 +261,21 @@ svg {
     height: min(220px, 60vw);
     margin-bottom: 12px;
     padding: 5px;
+    filter: drop-shadow(0 3px 10px rgba(219, 62, 77, 0.12));
   }
   
   .spin-btn {
     margin-bottom: 10px;
     letter-spacing: 0.6px;
+    box-shadow: 
+      0 3px 15px rgba(219, 62, 77, 0.2),
+      0 0 10px rgba(48, 88, 166, 0.12);
   }
   
   .selected-question {
     margin-top: 6px;
     border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(48, 88, 166, 0.18);
   }
 }
 
@@ -229,12 +289,30 @@ svg {
     width: min(200px, 55vw);
     height: min(200px, 55vw);
     margin-bottom: 10px;
+    filter: drop-shadow(0 2px 8px rgba(219, 62, 77, 0.1));
   }
   
   .roulette-container::before {
     width: min(240px, 65vw);
     height: min(240px, 65vw);
     top: 20%;
+  }
+}
+
+/* Optimizaciones específicas para dispositivos de baja potencia */
+@media (max-width: 480px) and (-webkit-min-device-pixel-ratio: 2) {
+  svg {
+    shape-rendering: crispEdges;
+    text-rendering: geometricPrecision;
+  }
+  
+  .roulette-wrapper {
+    filter: none; /* Remover filtros pesados en pantallas retina móviles */
+  }
+  
+  .roulette-pointer {
+    filter: none;
+    text-shadow: 0 1px 4px rgba(219, 62, 77, 0.4);
   }
 }
 
@@ -267,6 +345,7 @@ svg {
     width: min(180px, 50vw);
     height: min(180px, 50vw);
     margin-bottom: 8px;
+    filter: none;
   }
   
   .roulette-container::before {
@@ -290,6 +369,7 @@ svg {
     height: min(160px, 35vh);
     margin-bottom: 0;
     margin-right: 10px;
+    filter: none;
   }
   
   .selected-question {

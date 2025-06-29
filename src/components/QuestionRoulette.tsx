@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { questions } from '../data/questions';
 import './QuestionRoulette.css';
 import inyeccionImage from '../assets/inyeccion2.png';
@@ -21,25 +21,49 @@ const QuestionRoulette: React.FC = () => {
 
   const anglePerSlice = 360 / NUMBERS.length;
 
-  const spinRoulette = () => {
+  const spinRoulette = useCallback(() => {
       if (spinning) return;
       setSpinning(true);
+      
       // Entre 2 y 4 vueltas aleatorias para más variabilidad
       const minSpins = 2;
       const maxSpins = 4;
       const totalSpins = minSpins + Math.random() * (maxSpins - minSpins);
       const randomSegment = Math.floor(Math.random() * NUMBERS.length);
       const segmentAngle = randomSegment * anglePerSlice + (anglePerSlice / 2);
+      
       // Nueva posición: ángulo actual + vueltas aleatorias + ángulo del segmento
       const newAngle = angle + (360 * totalSpins) + segmentAngle;
       setAngle(newAngle);
-      setTimeout(() => {
-          const normalized = ((newAngle % 360) + 360) % 360;
-          let index = Math.floor((360 - normalized) / anglePerSlice) % NUMBERS.length;
-          if (index < 0) index += NUMBERS.length;
-          setSelected(index);
-          setSpinning(false);
+      
+      // Usar requestAnimationFrame para mejor sincronización
+      const timeout = setTimeout(() => {
+          requestAnimationFrame(() => {
+              const normalized = ((newAngle % 360) + 360) % 360;
+              let index = Math.floor((360 - normalized) / anglePerSlice) % NUMBERS.length;
+              if (index < 0) index += NUMBERS.length;
+              setSelected(index);
+              setSpinning(false);
+          });
       }, 4000);
+
+      return () => clearTimeout(timeout);
+  }, [spinning, angle, anglePerSlice]);
+
+  // Optimización: usar una transición más suave para móviles
+  const getTransitionStyle = () => {
+    if (!spinning) return 'none';
+    
+    // Detectar si es móvil
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+      // Transición optimizada para móviles
+      return 'transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    } else {
+      // Transición normal para desktop
+      return 'transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    }
   };
 
   return (
@@ -47,9 +71,10 @@ const QuestionRoulette: React.FC = () => {
           <div className="roulette-wrapper">
               <svg
                   viewBox={`0 0 ${CENTER * 2} ${CENTER * 2}`}
+                  className={spinning ? 'roulette-spinning' : ''}
                   style={{
                       transform: `rotate(${angle}deg)`,
-                      transition: spinning ? 'transform 4s cubic-bezier(.25,.46,.45,.94)' : 'none',
+                      transition: getTransitionStyle(),
                   }}
               >
                   <defs>
