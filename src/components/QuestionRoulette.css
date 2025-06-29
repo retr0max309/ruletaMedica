@@ -10,13 +10,16 @@
   position: relative;
   box-sizing: border-box;
   overflow: hidden;
-  /* Optimización para móviles */
-  -webkit-transform: translateZ(0);
+  /* Optimizaciones máximas para GPU */
   transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
   backface-visibility: hidden;
-  -webkit-perspective: 1000px;
+  -webkit-backface-visibility: hidden;
   perspective: 1000px;
+  -webkit-perspective: 1000px;
+  /* Forzar aceleración de hardware */
+  will-change: transform;
+  -webkit-will-change: transform;
 }
 
 .roulette-container::before {
@@ -24,12 +27,15 @@
   position: absolute;
   top: 25%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate3d(-50%, -50%, 0);
   width: min(320px, 75vw);
   height: min(320px, 75vw);
   background: radial-gradient(circle, rgba(219, 62, 77, 0.08) 0%, rgba(48, 88, 166, 0.05) 70%, transparent 100%);
   border-radius: 50%;
   z-index: 0;
+  /* Evitar repaint del background */
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
 .roulette-wrapper {
@@ -37,7 +43,6 @@
   width: min(280px, 70vw);
   height: min(280px, 70vw);
   margin-bottom: 20px;
-  filter: drop-shadow(0 8px 20px rgba(219, 62, 77, 0.2));
   z-index: 1;
   display: flex;
   align-items: center;
@@ -46,15 +51,18 @@
   border-radius: 50%;
   padding: 8px;
   flex-shrink: 0;
-  /* Optimizaciones de rendimiento críticas */
-  will-change: transform;
-  -webkit-transform: translateZ(0);
+  /* Máxima optimización GPU */
   transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+  transform-style: preserve-3d;
+  /* Filtros condicionales */
+  filter: drop-shadow(0 8px 20px rgba(219, 62, 77, 0.2));
 }
 
-svg {
+.roulette-svg {
   position: relative;
   z-index: 2;
   border-radius: 50%;
@@ -62,40 +70,53 @@ svg {
   height: 100%;
   max-width: 280px;
   max-height: 280px;
-  /* Optimizaciones SVG para móviles */
-  will-change: transform;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
+  /* Optimizaciones SVG críticas */
+  transform-origin: center center;
+  transform-style: preserve-3d;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  /* Rendering optimizations */
   shape-rendering: optimizeSpeed;
   text-rendering: optimizeSpeed;
   color-rendering: optimizeSpeed;
   image-rendering: optimizeSpeed;
+  /* GPU layer creation */
+  will-change: auto;
 }
 
-/* Clase específica para animación suave */
-.roulette-spinning {
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
+.roulette-svg.roulette-spinning {
   will-change: transform;
+  -webkit-will-change: transform;
+  /* Forzar capa de composición durante animación */
+  transform-style: preserve-3d;
+  isolation: isolate;
+}
+
+.roulette-svg.mobile-optimized {
+  /* Optimizaciones específicas para móviles */
+  shape-rendering: crispEdges;
+  text-rendering: geometricPrecision;
+  /* Reducir calidad de rendering para mejor performance */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  /* Evitar anti-aliasing costoso */
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
 }
 
 .roulette-pointer {
   position: absolute;
   top: -6px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate3d(-50%, 0, 0);
   font-size: clamp(1.5rem, 4vw, 2.2rem);
   color: #DB3E4D;
   z-index: 3;
   text-shadow: 0 2px 8px rgba(219, 62, 77, 0.3);
   filter: drop-shadow(0 0 15px #DB3E4D);
-  /* Optimización para el puntero */
-  -webkit-transform: translateX(-50%) translateZ(0);
-  transform: translateX(-50%) translateZ(0);
+  /* GPU optimization */
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 .spin-btn {
@@ -118,11 +139,10 @@ svg {
   z-index: 2;
   white-space: nowrap;
   flex-shrink: 0;
-  /* Optimización para botón */
-  -webkit-transform: translateZ(0);
+  /* GPU optimization */
   transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  will-change: transform;
 }
 
 .spin-btn::before {
@@ -131,7 +151,7 @@ svg {
 }
 
 .spin-btn:hover {
-  transform: translateY(-2px) translateZ(0);
+  transform: translate3d(0, -2px, 0);
   box-shadow: 
     0 8px 30px rgba(219, 62, 77, 0.4),
     0 0 20px rgba(48, 88, 166, 0.3);
@@ -140,7 +160,7 @@ svg {
 }
 
 .spin-btn:active {
-  transform: translateY(-1px) scale(0.98) translateZ(0);
+  transform: translate3d(0, -1px, 0) scale(0.98);
   box-shadow: 
     0 4px 15px rgba(219, 62, 77, 0.3),
     0 0 12px rgba(48, 88, 166, 0.2);
@@ -171,10 +191,8 @@ svg {
   position: relative;
   z-index: 2;
   flex-shrink: 0;
-  /* Optimización para la pregunta */
-  -webkit-transform: translateZ(0);
+  /* GPU optimization */
   transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
 
@@ -196,20 +214,22 @@ svg {
 
 @keyframes pop-in {
   0% { 
-    transform: scale(0.7) translateY(15px) translateZ(0); 
+    transform: translate3d(0, 15px, 0) scale(0.7); 
     opacity: 0; 
   }
   100% { 
-    transform: scale(1) translateY(0) translateZ(0); 
+    transform: translate3d(0, 0, 0) scale(1); 
     opacity: 1; 
   }
 }
 
-/* Media queries para móviles con optimizaciones adicionales */
+/* Optimizaciones específicas para móviles */
 @media (max-width: 480px) {
   .roulette-container {
     margin-top: 10px;
     padding: 8px;
+    /* Forzar aceleración en móviles */
+    transform: translate3d(0, 0, 0);
   }
   
   .roulette-wrapper {
@@ -217,20 +237,28 @@ svg {
     height: min(240px, 65vw);
     margin-bottom: 15px;
     padding: 6px;
-    /* Reducir efectos en móviles para mejor rendimiento */
+    /* Reducir efectos costosos */
     filter: drop-shadow(0 4px 12px rgba(219, 62, 77, 0.15));
+  }
+  
+  .roulette-svg {
+    /* Máxima optimización móvil */
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
   }
   
   .roulette-pointer {
     top: -5px;
-    /* Simplificar efectos en móviles */
-    filter: drop-shadow(0 0 8px #DB3E4D);
+    /* Simplificar efectos */
+    filter: none;
+    text-shadow: 0 1px 4px rgba(219, 62, 77, 0.6);
   }
   
   .spin-btn {
     margin-bottom: 12px;
     letter-spacing: 0.8px;
-    /* Reducir sombras en móviles */
+    /* Reducir sombras costosas */
     box-shadow: 
       0 4px 20px rgba(219, 62, 77, 0.25),
       0 0 12px rgba(48, 88, 166, 0.15);
@@ -239,84 +267,62 @@ svg {
   .selected-question {
     margin-top: 8px;
     border-radius: 15px;
-    /* Reducir sombras en móviles */
     box-shadow: 0 6px 20px rgba(48, 88, 166, 0.2);
   }
 }
 
+/* Optimizaciones extremas para dispositivos muy limitados */
 @media (max-width: 380px) {
-  .roulette-container {
-    margin-top: 8px;
-    padding: 6px;
-  }
-  
-  .roulette-container::before {
-    width: min(260px, 70vw);
-    height: min(260px, 70vw);
-    top: 22%;
-  }
-  
   .roulette-wrapper {
-    width: min(220px, 60vw);
-    height: min(220px, 60vw);
-    margin-bottom: 12px;
-    padding: 5px;
-    filter: drop-shadow(0 3px 10px rgba(219, 62, 77, 0.12));
-  }
-  
-  .spin-btn {
-    margin-bottom: 10px;
-    letter-spacing: 0.6px;
-    box-shadow: 
-      0 3px 15px rgba(219, 62, 77, 0.2),
-      0 0 10px rgba(48, 88, 166, 0.12);
-  }
-  
-  .selected-question {
-    margin-top: 6px;
-    border-radius: 14px;
-    box-shadow: 0 4px 15px rgba(48, 88, 166, 0.18);
-  }
-}
-
-@media (max-width: 360px) {
-  .roulette-container {
-    margin-top: 5px;
-    padding: 5px;
-  }
-  
-  .roulette-wrapper {
-    width: min(200px, 55vw);
-    height: min(200px, 55vw);
-    margin-bottom: 10px;
-    filter: drop-shadow(0 2px 8px rgba(219, 62, 77, 0.1));
-  }
-  
-  .roulette-container::before {
-    width: min(240px, 65vw);
-    height: min(240px, 65vw);
-    top: 20%;
-  }
-}
-
-/* Optimizaciones específicas para dispositivos de baja potencia */
-@media (max-width: 480px) and (-webkit-min-device-pixel-ratio: 2) {
-  svg {
-    shape-rendering: crispEdges;
-    text-rendering: geometricPrecision;
-  }
-  
-  .roulette-wrapper {
-    filter: none; /* Remover filtros pesados en pantallas retina móviles */
+    filter: none; /* Eliminar todos los filtros */
   }
   
   .roulette-pointer {
     filter: none;
-    text-shadow: 0 1px 4px rgba(219, 62, 77, 0.4);
+    text-shadow: 0 1px 3px rgba(219, 62, 77, 0.7);
+  }
+  
+  .spin-btn {
+    box-shadow: 0 3px 15px rgba(219, 62, 77, 0.2);
+  }
+  
+  .selected-question {
+    box-shadow: 0 4px 15px rgba(48, 88, 166, 0.18);
   }
 }
 
-/* Para pantallas muy pequeñas en altura */
+/* Optimizaciones para pantallas de alta densidad */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .roulette-svg.mobile-optimized {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Reducir complejidad en dispositivos con poca memoria */
+@media (max-device-width: 480px) and (orientation: portrait) {
+  .roulette-container::before {
+    background: rgba(219, 62, 77, 0.05); /* Gradiente simplificado */
+  }
+  
+  .roulette-wrapper {
+    background: #f0f0f0; /* Color sólido en lugar de gradiente */
+  }
+}
+
+/* Para dispositivos con GPU limitada */
+@supports not (will-change: transform) {
+  .roulette-svg {
+    transform: none !important;
+    animation: spin-fallback 4s ease-out;
+  }
+  
+  @keyframes spin-fallback {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(1440deg); }
+  }
+}
+
+/* Media queries restantes (altura, landscape, etc.) */
 @media (max-height: 700px) {
   .roulette-container {
     margin-top: 5px;
@@ -355,7 +361,6 @@ svg {
   }
 }
 
-/* Orientación landscape en móviles */
 @media (max-height: 500px) and (orientation: landscape) {
   .roulette-container {
     margin-top: 2px;
