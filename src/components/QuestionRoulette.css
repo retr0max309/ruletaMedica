@@ -2,20 +2,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
-  padding: 20px;
+  justify-content: flex-start;
+  margin-top: 15px;
+  padding: 10px;
   width: 100%;
+  min-height: 100vh;
   position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .roulette-container::before {
   content: '';
   position: absolute;
-  top: 50%;
+  top: 25%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 460px;
-  height: 460px;
+  width: min(320px, 75vw);
+  height: min(320px, 75vw);
   background: radial-gradient(circle, rgba(219, 62, 77, 0.08) 0%, rgba(48, 88, 166, 0.05) 70%, transparent 100%);
   border-radius: 50%;
   z-index: 0;
@@ -23,31 +27,36 @@
 
 .roulette-wrapper {
   position: relative;
-  width: 420px;
-  height: 420px;
-  margin-bottom: 40px;
-  filter: drop-shadow(0 15px 35px rgba(219, 62, 77, 0.2));
+  width: min(280px, 70vw);
+  height: min(280px, 70vw);
+  margin-bottom: 20px;
+  filter: drop-shadow(0 8px 20px rgba(219, 62, 77, 0.2));
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   background: radial-gradient(circle, #f8f9fa 0%, #e9ecef 100%);
   border-radius: 50%;
-  padding: 10px;
+  padding: 8px;
+  flex-shrink: 0;
 }
 
 svg {
   position: relative;
   z-index: 2;
   border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  max-width: 280px;
+  max-height: 280px;
 }
 
 .roulette-pointer {
   position: absolute;
-  top: -8px;
+  top: -6px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 2.8rem;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
   color: #DB3E4D;
   z-index: 3;
   text-shadow: 0 2px 8px rgba(219, 62, 77, 0.3);
@@ -59,31 +68,33 @@ svg {
   color: #FFFFFF;
   border: 3px solid #3058A6;
   border-radius: 50px;
-  padding: 1.2rem 3rem;
-  font-size: 1.4rem;
+  padding: clamp(0.8rem, 2.5vw, 1.1rem) clamp(1.5rem, 5vw, 2.5rem);
+  font-size: clamp(1rem, 2.8vw, 1.3rem);
   font-weight: bold;
   cursor: pointer;
   box-shadow: 
-    0 8px 30px rgba(219, 62, 77, 0.3),
-    0 0 20px rgba(48, 88, 166, 0.2);
+    0 6px 25px rgba(219, 62, 77, 0.3),
+    0 0 15px rgba(48, 88, 166, 0.2);
   transition: all 0.3s ease;
-  margin-bottom: 2rem;
+  margin-bottom: 15px;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   position: relative;
   z-index: 2;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .spin-btn::before {
   content: '🩸';
-  margin-right: 8px;
+  margin-right: 6px;
 }
 
 .spin-btn:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   box-shadow: 
-    0 12px 40px rgba(219, 62, 77, 0.4),
-    0 0 30px rgba(48, 88, 166, 0.3);
+    0 8px 30px rgba(219, 62, 77, 0.4),
+    0 0 20px rgba(48, 88, 166, 0.3);
   background: linear-gradient(135deg, #c8364a 0%, #b02e40 100%);
   border-color: #2a4d8f;
 }
@@ -91,8 +102,8 @@ svg {
 .spin-btn:active {
   transform: translateY(-1px) scale(0.98);
   box-shadow: 
-    0 6px 20px rgba(219, 62, 77, 0.3),
-    0 0 15px rgba(48, 88, 166, 0.2);
+    0 4px 15px rgba(219, 62, 77, 0.3),
+    0 0 12px rgba(48, 88, 166, 0.2);
 }
 
 .spin-btn:disabled {
@@ -108,26 +119,29 @@ svg {
   background: #3058A6;
   color: #FFFFFF;
   border: 3px solid #DB3E4D;
-  border-radius: 25px;
-  padding: 2.5rem 3rem;
-  box-shadow: 0 12px 40px rgba(48, 88, 166, 0.25);
-  margin-top: 2rem;
-  min-width: 350px;
-  max-width: 700px;
-  font-size: 1.3rem;
+  border-radius: 18px;
+  padding: clamp(1rem, 3vw, 1.8rem) clamp(1.2rem, 4vw, 2.2rem);
+  box-shadow: 0 8px 25px rgba(48, 88, 166, 0.25);
+  margin-top: 10px;
+  width: min(550px, 88vw);
+  max-width: 88vw;
+  font-size: clamp(0.95rem, 2.5vw, 1.2rem);
   font-family: 'Segoe UI', 'Arial', sans-serif;
   animation: pop-in 0.6s cubic-bezier(.68,-0.55,.27,1.55);
   position: relative;
   z-index: 2;
+  flex-shrink: 0;
 }
 
 .selected-question h2 {
-  font-size: 1.5rem;
+  font-size: clamp(1.05rem, 2.8vw, 1.35rem);
   font-weight: 700;
   margin: 0;
   text-align: center;
-  line-height: 1.5;
+  line-height: 1.35;
   color: #FFFFFF;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .selected-question h2 span {
@@ -137,7 +151,7 @@ svg {
 
 @keyframes pop-in {
   0% { 
-    transform: scale(0.7) translateY(20px); 
+    transform: scale(0.7) translateY(15px); 
     opacity: 0; 
   }
   100% { 
@@ -146,19 +160,141 @@ svg {
   }
 }
 
-@media (max-width: 768px) {
+/* Media queries para móviles */
+@media (max-width: 480px) {
+  .roulette-container {
+    margin-top: 10px;
+    padding: 8px;
+  }
+  
   .roulette-wrapper {
-    width: 300px;
-    height: 300px;
+    width: min(240px, 65vw);
+    height: min(240px, 65vw);
+    margin-bottom: 15px;
+    padding: 6px;
+  }
+  
+  .roulette-pointer {
+    top: -5px;
+  }
+  
+  .spin-btn {
+    margin-bottom: 12px;
+    letter-spacing: 0.8px;
   }
   
   .selected-question {
-    max-width: 90vw;
-    font-size: 1.1rem;
-    padding: 1.5rem 2rem;
+    margin-top: 8px;
+    border-radius: 15px;
+  }
+}
+
+@media (max-width: 380px) {
+  .roulette-container {
+    margin-top: 8px;
+    padding: 6px;
   }
   
-  .selected-question h2 {
-    font-size: 1.2rem;
+  .roulette-container::before {
+    width: min(260px, 70vw);
+    height: min(260px, 70vw);
+    top: 22%;
+  }
+  
+  .roulette-wrapper {
+    width: min(220px, 60vw);
+    height: min(220px, 60vw);
+    margin-bottom: 12px;
+    padding: 5px;
+  }
+  
+  .spin-btn {
+    margin-bottom: 10px;
+    letter-spacing: 0.6px;
+  }
+  
+  .selected-question {
+    margin-top: 6px;
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .roulette-container {
+    margin-top: 5px;
+    padding: 5px;
+  }
+  
+  .roulette-wrapper {
+    width: min(200px, 55vw);
+    height: min(200px, 55vw);
+    margin-bottom: 10px;
+  }
+  
+  .roulette-container::before {
+    width: min(240px, 65vw);
+    height: min(240px, 65vw);
+    top: 20%;
+  }
+}
+
+/* Para pantallas muy pequeñas en altura */
+@media (max-height: 700px) {
+  .roulette-container {
+    margin-top: 5px;
+    min-height: auto;
+  }
+  
+  .roulette-wrapper {
+    margin-bottom: 10px;
+  }
+  
+  .spin-btn {
+    margin-bottom: 8px;
+  }
+  
+  .selected-question {
+    margin-top: 5px;
+  }
+}
+
+@media (max-height: 600px) {
+  .roulette-container {
+    margin-top: 3px;
+  }
+  
+  .roulette-wrapper {
+    width: min(180px, 50vw);
+    height: min(180px, 50vw);
+    margin-bottom: 8px;
+  }
+  
+  .roulette-container::before {
+    width: min(220px, 60vw);
+    height: min(220px, 60vw);
+    top: 18%;
+  }
+}
+
+/* Orientación landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  .roulette-container {
+    margin-top: 2px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+  }
+  
+  .roulette-wrapper {
+    width: min(160px, 35vh);
+    height: min(160px, 35vh);
+    margin-bottom: 0;
+    margin-right: 10px;
+  }
+  
+  .selected-question {
+    margin-top: 0;
+    margin-left: 10px;
+    max-width: 50vw;
   }
 }

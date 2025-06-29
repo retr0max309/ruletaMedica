@@ -46,8 +46,7 @@ const QuestionRoulette: React.FC = () => {
       <div className="roulette-container">
           <div className="roulette-wrapper">
               <svg
-                  width={CENTER * 2}
-                  height={CENTER * 2}
+                  viewBox={`0 0 ${CENTER * 2} ${CENTER * 2}`}
                   style={{
                       transform: `rotate(${angle}deg)`,
                       transition: spinning ? 'transform 4s cubic-bezier(.25,.46,.45,.94)' : 'none',
